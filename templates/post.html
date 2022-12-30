@@ -1,0 +1,240 @@
+{% extends "layout_main.html" %}
+
+{% block title %}
+{{ post.title }}
+{% endblock %}
+
+{% block main %}
+
+<div class="post-grid">
+    <div class="author-title">
+        {{ post.author }}
+    </div>
+    <div class="author-title">
+        {{ post.title }}
+    </div>
+    <div class="photo">
+        <img src="{{  url_for('static', filename=post.photo) }}" alt="{{ post.title }}" style="width:100%">
+    </div>
+    <div class="quote" id="quote">
+        <span class="quote-text">{{ post.quote }}</span>
+    </div>
+    <div class="add-to-collection">
+        <form action="/collection" method="post" name="collection">
+            <input name="post_id" value="{{ post.id }}" type="hidden">
+            <input id="currentPage" name="current-page" type="hidden" value="">
+            <input id="collectionButton" name="collection-button" type="submit" class="my-button" value="">
+        </form>
+    </div>
+    <div id="show-map-button" class="show-map-button">
+        <a href="#post-map" id="open-map" class="btn btn-dark" data-bs-toggle="collapse" onclick="openMap ()"></a>
+    </div>
+    <div id="post-map" class="post-map">
+        <div id="googleMap"></div>
+        <div id="dropdown" class="dropup">
+            <button id="drop-menu" type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">More
+                markers</button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item" type="button" id="some">{{ post.title }}</button>
+                <button class="dropdown-item" type="button" id="more">All</button>
+            </div>
+        </div>
+        <div class="map-info" id="map-info">Drag the marker or just click to change the location</div>
+    </div>
+    <div class="under-the-line" id="under-the-line">
+        <hr style="margin-top: 30px">
+        <div class="created-by" id="created-by">
+            <form action="/uploader" method="post">
+                <input type="hidden" id="location" name="location">
+                <input type="submit" class="my-button" value="Save post">
+            </form>
+        </div>
+        <div id="modifyButton" style="display: none;">
+            <form action="/delete" method="post" id="delete" style="display: inline-block;"
+                onsubmit="return deleteAlert()">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <input type="submit" class="my-button" value="Delete">
+            </form>
+            <form action="/modify" method="post" id="modify" style="display: inline-block;">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <input type="submit" class="my-button" value="Modify">
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    const markersArr = [];
+    const but = document.getElementById("open-map");
+
+    but.innerHTML = "Open map";
+
+    var coordinates = JSON.parse('{{coordinates | tojson}}');
+    var author = JSON.parse('{{ post.author | tojson}}');
+    var title = JSON.parse('{{ post.title | tojson}}');
+    var latitude = JSON.parse('{{ post.latitude | tojson }}');
+    var longitude = JSON.parse('{{ post.longitude | tojson }}');
+    var userId = JSON.parse('{{ post.user_id | tojson }}');
+    var loggedUser = JSON.parse('{{ logged_user | tojson }}');
+
+    // If no coordinates and map is showed, the site is in place-the-marker mode (in the middle of creating the post)
+    // Otherwise the post is in view-mode.
+    if (coordinates) {
+        document.getElementById("map-info").style.display = "none";
+        var user = JSON.parse('{{ post.user | tojson }}');
+        document.getElementById("created-by").innerHTML = "Created by " + user;
+        if (userId == loggedUser.user_id) {
+            document.getElementById("created-by").style.display = "none";
+            document.getElementById("modifyButton").style.display = "unset";
+            document.getElementById("collectionButton").style.display = "none";
+        } else {
+            // Adding to and removing from the collection
+            if (loggedUser.user_id == null) {
+                document.getElementById("collectionButton").style.display = "none";
+            } else {
+                var currentLoc = location.pathname;
+                var searchLoc = location.search;
+                document.getElementById("currentPage").value = currentLoc + searchLoc;
+                if (loggedUser.in_collection) {
+                    document.getElementById("collectionButton").classList.add("remove-collection");
+                    document.getElementById("collectionButton").value = "Remove from collection";
+                } else {
+                    document.getElementById("collectionButton").classList.add("add-collection");
+                    document.getElementById("collectionButton").value = "Add to Collection";
+                };
+            };
+        };
+        document.getElementById("post-map").classList.add("collapse");
+    } else {
+        document.getElementById("show-map-button").style.display = "none";
+        document.getElementById("dropdown").style.display = "none";
+        document.getElementById("post-map").classList.add("post-map-flex");
+        document.getElementById("collectionButton").style.display = "none";
+    };
+
+
+    // Hide button `Open map` if the post hasn't been marked on the map
+    // and change layout moving quote to the map's place.
+    if (!(latitude && longitude)) {
+        but.style.display = "none";
+        document.getElementById("quote").classList.add("quote-with-no-map");
+    };
+
+    // Center the map
+    function myMap() {
+        var central = new google.maps.LatLng(latitude, longitude);
+        var mapProp = {
+            center: central,
+            zoom: 15,
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+        // Markers section
+        // If no coordinates, make marker dragable and remember its location.
+        var loc = new google.maps.LatLng(latitude, longitude);
+        if (!(coordinates)) {
+            // Place marker in the place chosen by the user
+            placeMarker(map, central);
+            marker.setMap(map);
+            passCoordinates(central);
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                passCoordinates(event.latLng);
+                marker.setPosition(event.latLng);
+            })
+
+        } else {
+            placeMarker(map, loc);
+            marker.setMap(map);
+
+            document.getElementById("more").onclick = function () {
+                hideMarkers();
+                showMarkers("all");
+                this.disabled = true;
+                document.getElementById("some").disabled = false;
+            };
+
+            document.getElementById("some").onclick = function () {
+                hideMarkers();
+                showMarkers("some");
+                this.disabled = true;
+                document.getElementById("more").disabled = false;
+            };
+        };
+
+        function placeMarker(map, loc) {
+            marker = new google.maps.Marker({
+                position: loc,
+                map: map,
+                draggable: false,
+                title: null,
+            });
+
+            if (!(coordinates)) {
+                marker.draggable = true;
+            } else {
+                marker.title = author + "\n" + title;
+            };
+            google.maps.event.addListener(marker, 'dragend', function (event) {
+                passCoordinates(event.latLng);
+            });
+        };
+
+        function passCoordinates(coords) {
+            document.getElementById('location').value = coords;
+        };
+
+        // Place more markers
+        function showMarkers(how) {
+            for (let x of coordinates) {
+                if (how == "all" || (x.title == title && x.author == author)) {
+                    let loc = new google.maps.LatLng(x.latitude, x.longitude);
+                    let addre = "/post/?p=" + x.id;
+                    let mark = new google.maps.Marker({
+                        position: loc,
+                        title: x.author + "\n" + x.title,
+                        opacity: 0.6,
+                        url: addre,
+                    });
+                    mark.setMap(map);
+
+                    google.maps.event.addListener(mark, 'click', function () {
+                        window.location.href = mark.url;
+                    });
+                    markersArr.push(mark);
+                };
+            };
+        };
+        function hideMarkers() {
+            var len = 0;
+            var i;
+            for (i in markersArr) {
+                if (markersArr.hasOwnProperty(i)) {
+                    len++;
+                }
+            }
+            for (let i = 0; i < len; i++) {
+                markersArr[i].setMap(null);
+            }
+        }
+    };
+
+    function openMap() {
+        if (but.innerHTML == "Open map") {
+            but.innerHTML = "Close map";
+        } else {
+            but.innerHTML = "Open map"
+        };
+    };
+
+    function deleteAlert() {
+        if (confirm("Are you sure you want to delete this post?")) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=myMap"></script>
+
+{% endblock %}

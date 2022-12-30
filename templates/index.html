@@ -1,0 +1,25 @@
+{% extends "layout_main.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+
+<body class="body-index">
+    <div id="joyce">
+        <p> Stately, plump Buck Mulligan came from the stairhead,
+            bearing a bowl of lather on which a mirror and a razor lay crossed.
+            A yellow dressinggown, ungirdled, was sustained gently
+            behind him on the mild morning air.</p>
+        <p id="joyce-author">— James Joyce, Ulysses</p>
+    </div>
+    <div class="search">
+        <form action="/search" method="get" name="searchbar" onsubmit="return verify(this.name)">
+            <input autocomplete="off" class="searchbar verify" type="text" id="search" name="q"
+                placeholder="Enter author, title, quote or place">
+            <div class="login_alert" id="searchAlert"></div>
+        </form>
+    </div>
+</body>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layout_log.html" %}
+
+{% block title %}
+Log in
+{% endblock %}
+
+{% block main %}
+<div class="login-frame">
+    <form action="/login" method="post" name="login" onsubmit="return verify(this.name)">
+        <label for="username">Name:</label><br>
+        <input class="login-input verify" autocomplete="off" autofocus id="username" name="username" type="text"><br>
+        <div class="login-alert" id="usernameAlert"></div>
+
+        <label for="password">Password:</label><br>
+        <input class="login-input verify" autocomplete="off" id="password" name="password" type="password"><br>
+        <div class="login-alert" id="passwordAlert"></div>
+
+        <input name="next" type="hidden" value="{{ request.args.get('next', '') }}">
+        <input class="my-button" id="log-submit" type="submit" value="Log In">
+    </form>
+</div>
+<script>
+    var invalid = JSON.parse('{{invalid | tojson}}');
+    var alertBlock = "passwordAlert";
+    if (invalid) {
+        var name = JSON.parse('{{name | tojson}}')
+        invalidInput("Username or password is incorrect", alertBlock);
+        document.getElementById("username").value = name;
+    };
+</script>
+{% endblock %}

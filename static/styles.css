@@ -1,0 +1,499 @@
+body {
+    font-family: Montserrat, Helvetica, sans-serif;
+    background-color: rgba(255, 138, 0, 0.1);
+    margin-bottom: 30px;
+    box-sizing: border-box;
+}
+
+.body-index {
+    background-image: url('/static/bnw.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position-y: 4em
+}
+
+
+footer {
+    background-color: black;
+    font-size: small;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.nav-item :focus {
+    outline: none;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    color: white;
+}
+
+
+div.search :focus {
+    outline: none;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+}
+
+.form-control:focus {
+    border-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+    background-color: rgb(178, 156, 118);
+}
+
+.nav-link {
+    color: black;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: white;
+}
+
+.navbar-toggler {
+    border: 1px solid;
+}
+
+.login-frame {
+    display: block;
+    width: 370px;
+    height: 270px;
+    border: 4px solid rgb(178, 156, 118);
+    color: black;
+    padding: 20px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+}
+
+.login-alert {
+    padding-top: 5px;
+    width: 100%;
+    height: 30px;
+}
+
+.my-button {
+    margin-top: 20px;
+    width: 100px;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+
+.my-button:hover {
+    background-color: rgb(178, 156, 118);
+}
+
+.my-button:active {
+    background-color: rgb(178, 156, 118, 0.5);
+}
+
+.add-to-collection .my-button {
+    margin-top: 0;
+    font-size: small;
+    color: white;
+    width: auto;
+    border-color: green;
+}
+
+.add-to-collection .my-button.add-collection {
+    background-color: rgba(0, 128, 0, 0.8);
+}
+
+.add-to-collection .my-button.add-collection:active {
+    background-color: yellowgreen;
+}
+
+.add-to-collection .my-button.remove-collection {
+    background-color: yellowgreen;
+}
+
+.add-to-collection .my-button.remove-collection:active {
+    background-color: rgba(0, 128, 0, 0.8);
+}
+
+.login-input {
+    width: 240px;
+    height: 30px;
+}
+
+.login-input:focus {
+    outline: none;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.posts-exp {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.register-frame {
+    height: 355px;
+}
+
+.search {
+    margin-top: 250px;
+    width: 100%;
+    text-align: center;
+}
+
+.searchbar {
+    width: 300px;
+    height: 2.5em;
+}
+
+.small-author-title {
+    background-color: white;
+    width: 360px;
+    margin: 35px 10px -10px 0px;
+    font-size: 0.9em;
+    border-top: 1px solid rgb(178, 156, 118);
+    overflow: hidden;
+}
+
+.small-author-title p {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.small-author-title div {
+    float: right;
+    margin-right: 2px;
+}
+
+.small-picture {
+    height: 120px;
+    padding: 0px 15px;
+}
+
+.small-picture:hover {
+    opacity: 0.5;
+    background-color: white;
+}
+
+.small-post {
+    background-color: white;
+    width: 360px;
+    height: 120px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    margin-right: 35px;
+}
+
+.small-quote {
+    font-size: small;
+    --line-height: 1.4;
+    --num-lines: 6;
+    line-height: var(--line-height);
+    display: block;
+    max-width: 100%;
+    height: calc(1em * var(--line-height) * var(--num-lines));
+    display: -webkit-box;
+    -webkit-line-clamp: var(--num-lines);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.small-quote-text {
+    white-space: pre-line;
+    padding-right: 3px;
+}
+
+/* Search results display */
+table {
+    border-collapse: unset;
+    border-spacing: .75rem;
+}
+
+tr {
+    max-height: 5rem;
+}
+
+.search-display td {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.search-display .picture-in-table {
+    height: 5rem;
+    width: 8rem;
+}
+
+.search-display .picture {
+    display: block;
+    height: 100%;
+    width: auto;
+    margin: 0 auto;
+}
+
+.search-display .text {
+    font-size: smaller;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 1rem;
+}
+
+.text p {
+    margin-bottom: 0;
+}
+
+/* Create new post */
+.new-post {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 60rem;
+    margin: auto;
+}
+
+.new-post div {
+    margin-bottom: -2rem;
+}
+
+.new-post h1 {
+    grid-column-start: 1;
+}
+
+.new-post p {
+    margin-bottom: -0.75rem;
+}
+
+.new-post .author,
+.title,
+.quote-area,
+.place-info,
+.place {
+    grid-column-start: 1;
+}
+
+.new-post .header {
+    margin-bottom: 1rem;
+}
+
+.form-control.quote {
+    min-height: 8rem;
+}
+
+.new-post .browse {
+    grid-column-start: 2;
+    grid-row-start: 2;
+    grid-row-end: span 4;
+}
+
+#yourPicture {
+    width: auto;
+    height: auto;
+    max-height: 30rem;
+    max-width: 100%;
+}
+
+
+.new-post .place-info {
+    margin-top: 5px;
+}
+
+.new-post .submit-post {
+    display: block;
+    height: 3rem;
+    width: 100%;
+    grid-column-start: 1;
+    margin: 2rem 0;
+}
+
+.new-post img {
+    vertical-align: top;
+    border: 2px solid black;
+    border-radius: 3px;
+    margin-top: 1rem;
+    margin-bottom: 3px;
+}
+
+#remove-button {
+    position: relative;
+    height: 100%;
+    margin-top: 0;
+    width: 10rem;
+}
+
+#place-info {
+    white-space: pre-line;
+    font-size: smaller;
+}
+
+/*Indiviual post settings*/
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 90%;
+    margin: auto;
+    margin-top: 4rem;
+    background-color: white;
+}
+
+.post-grid .author-title {
+    grid-column-start: 1;
+    font-size: large;
+    font-weight: 700;
+}
+
+.post-grid .show-map-button {
+    grid-column-start: 2;
+    grid-row-start: 2;
+    text-align: right;
+}
+
+.post-grid .post-map-flex {
+    display: flex;
+    flex-flow: column;
+}
+
+.post-grid .post-map {
+    grid-column-start: 2;
+    grid-row: 3 / span 2;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+}
+
+.post-grid .quote-text {
+    white-space: pre-line;
+}
+
+#googleMap {
+    flex: 1 1 auto;
+    height: 100%;
+    width: 100%;
+
+}
+
+.post-grid .dropup {
+    font-size: smaller;
+    margin-left: -1px;
+}
+
+.post-grid .map-info {
+    flex: 0 1 auto;
+    font-size: small;
+    text-align: center;
+}
+
+.post-grid .photo {
+    grid-column-start: 1;
+}
+
+.post-grid .quote-with-no-map {
+    grid-column-start: 2;
+}
+
+.post-grid .under-the-line {
+    grid-column: 1 / span 2;
+    font-size: smaller;
+    font-weight: bolder;
+    text-align: right;
+}
+
+.post-grid .add-to-collection {
+    grid-column-start: 2;
+    grid-row-start: 1;
+    text-align: right;
+}
+
+.sort-by-list {
+    width: 100%;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.sort-by-list li {
+    display: inline;
+    padding-right: 1.5rem;
+    white-space: nowrap;
+}
+
+.search-display a,
+.sort-by-list a {
+    text-decoration: none;
+    color: black;
+}
+
+.search-display a:hover,
+.sort-by-list a:hover,
+.sort-by-list a:target {
+    text-decoration: underline;
+}
+
+/* Index style */
+#joyce {
+    position: absolute;
+    right: 0px;
+    align-items: right;
+    width: 35%;
+    text-align: left;
+    padding: 1em 4em;
+}
+
+#joyce-author {
+    color: grey;
+    margin-top: -5px;
+}
+
+@media (max-width: 1060px) {
+    #joyce {
+        width: 70%;
+    }
+
+    #joyce-author {
+        margin-top: -12px;
+    }
+}
+
+@media (max-width: 700px) {
+    #joyce {
+        width: 60%;
+        font-size: 0.8em;
+        padding: 1em 2em;
+    }
+
+    .post-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .post-grid .post-map {
+        grid-column-start: 1;
+        grid-row-start: 6;
+        min-height: 20rem;
+    }
+
+    .post-grid .show-map-button {
+        grid-column-start: 1;
+        grid-row-start: 5;
+    }
+
+    .picture-in-table {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    #joyce {
+        width: 45%;
+        font-size: 0.7em;
+        padding: 1em 1em;
+    }
+}

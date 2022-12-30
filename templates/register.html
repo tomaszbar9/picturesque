@@ -1,0 +1,38 @@
+{% extends "layout_log.html" %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block main %}
+<div class="login-frame register-frame">
+    <form action="/register" method="post" name="register" onsubmit="return verify(this.name)">
+        <label for="username">Name:</label><br>
+        <input class="login-input verify" autocomplete="off" autofocus id="username" name="username" type="text"><br>
+        <div class="login-alert" id="usernameAlert"></div>
+
+        <label for="password">Password:</label><br>
+        <input class="login-input verify" autocomplete="off" id="password" name="password" type="password"><br>
+        <div class="login-alert" id="passwordAlert"></div>
+
+        <label for="confirmation">Confirm password:</label><br>
+        <input class="login-input verify" autocomplete="off" id="confirmation" name="confirmation" type="password"><br>
+        <div class="login-alert" id="confirmationAlert"></div>
+
+        <input name="next" type="hidden" value="{{ request.args.get('next', '') }}">
+        <input class="my-button" id="log-submit" type="submit" value="Register">
+    </form>
+</div>
+<script>
+    var invalid = JSON.parse('{{invalid | tojson}}');
+    if (invalid) {
+        var problem = JSON.parse('{{problem | tojson}}');
+        if (problem == "wrong_name") {
+            invalidInput("Username not available", "usernameAlert");
+            document.getElementById("username").value = JSON.parse('{{name | tojson}}');
+        } else {
+            invalidInput("Registration failed. Try again.", "confirmationAlert")
+        }
+    };
+</script>
+{% endblock %}

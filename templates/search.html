@@ -1,0 +1,44 @@
+{% extends "layout_main.html" %}
+
+{% block title %}
+Search
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="sort-by-list">
+        <ul>
+            {% if posts %}
+            <li>Found <b>{{ phrase }}</b> in:</li>
+            {% else %}
+            <li>Could not find <b>{{ phrase }}</b>.</li>
+            {% endif %}
+            {% for post_tuple in posts %}
+            <li><a href="#{{ post_tuple[0] }}">{{ post_tuple[0] }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <table>
+        {% for post_tuple in posts %}
+        <tr>
+            <th id="{{ post_tuple[0] }}">
+                {{ post_tuple[0] }}
+            </th>
+        </tr>
+        {% for post in post_tuple[1] %}
+        <tr class="search-display">
+            <td class="picture-in-table">
+                <img class="picture" src="{{ url_for ('static', filename=post.thumbnail) }}" alt="{{ post.title }}">
+            </td>
+            <td class="text">
+                <a href="{{ url_for('display_post', p=post.id) }}">
+                    <p>{{ post.text|safe }}</p>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

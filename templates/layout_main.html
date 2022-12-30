@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block template %}
+
+<body>
+    <main>
+        <nav class="navbar navbar-expand-sm">
+            <div class="container-fluid"
+                style="border-bottom: 3px solid black; padding-bottom: 5px; margin-bottom: -8px;">
+                <a class="navbar-brand" href="/">
+                    <img src="/static/pict1.png" alt="Logo" style="height:40px;">
+                </a>
+                <button class="navbar-light navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#my-navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="my-navbar">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('posts', site='latest') }}">All posts</a>
+                        </li>
+                        {% if session["user_id"] %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user', selection='posts', site='latest') }}">My
+                                posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user', selection='collection', site='latest') }}">My
+                                collection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                href="{{ url_for('user', selection='recommendations', site='latest') }}">Recommendations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('new_entry') }}">Create new post</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        {% if session["user_id"] %}
+                        <li class="nav-item">
+                            <a id="logout" class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a id="login" class="nav-link" href="{{ url_for('login') }}">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="register" class="nav-link" href="{{ url_for('register') }}">Register</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% block main %}{% endblock %}
+    </main>
+</body>
+<script>
+    var currentLoc = location.pathname;
+    var searchLoc = location.search;
+    var links = document.getElementsByClassName("nav-link");
+    for (li of links) {
+        var thisLink = li.href;
+        if ((thisLink.includes(currentLoc)) && !(currentLoc == "/")) {
+            li.style.color = "white";
+        }
+    };
+    document.getElementById("login").href = "/login?next=" + currentLoc + searchLoc;
+    document.getElementById("register").href = "/register?next=" + currentLoc + searchLoc;
+</script>
+{% endblock %}

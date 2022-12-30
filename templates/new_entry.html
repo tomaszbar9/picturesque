@@ -1,0 +1,154 @@
+{% extends "layout_main.html" %}
+
+{% block title %}
+New entry
+{% endblock %}
+
+{% block main %}
+<div class="container mt-3">
+    <form action="/uploader" enctype="multipart/form-data" method="post" name="new_post"
+        onsubmit="return verifyForm(this.name)">
+        <div class="new-post">
+            <div class="header">
+                <h1 id="header">Create new post:</h1>
+                <p id="headrerInfo"></p>
+            </div>
+            <div class="form-floating mb-3 mt-3 author">
+                <input class="form-control verify" type="text" id="author" name="author" list="authors_list"
+                    autocomplete="off" placeholder="Author">
+                <label for="author">Author</label>
+                <div class="login-alert" id="authorAlert"></div>
+                <datalist id="authors_list">
+                    {% for author in authors %}
+                    <option value="{{ author }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="form-floating mb-3 mt-3 title">
+                <input class="form-control verify" type="text" id="title" name="title" list="titles_list"
+                    autocomplete="off" placeholder="Title">
+                <label for="title">Title</label>
+                <div class="login-alert" id="titleAlert"></div>
+                <datalist id="titles_list">
+                    {% for title in titles %}
+                    <option value="{{ title }}"></option>
+                    {% endfor %}
+                </datalist>
+            </div>
+            <div class="form-floating mb-3 mt-3 quote-area">
+                <textarea class="form-control quote verify" id="quote" name="quote" placeholder="Quote"
+                    oninput="removeLabel()"></textarea>
+                <label for="quote" id="quoteLabel">Quote</label>
+                <div class="login-alert" id="quoteAlert"></div>
+            </div>
+            <div class="browse">
+                <div id="switch-visible" style="display:none">
+                    <img id="yourPicture">
+                    <button class="my-button" id="remove-button" type="button" onclick="removePicture()">Change
+                        picture</button>
+                </div>
+                <button id="browse-files" class="my-button" type="button" onclick="clickSubmit()"
+                    style="margin-top:1rem; margin-left:2rem; width:10rem">Browse files to add
+                    picture</button>
+                <span class="login-alert" id="picture-buttonAlert" style="white-space:nowrap; margin-left:2rem;"></span>
+                <input class="verify" id="picture-button" type="file" name="file" accept="image/png, image/jpeg" hidden
+                    oninput="showPicture(event)">
+            </div>
+            <div class="place-info">
+                <p id="place-info" style="white-space: pre-line">
+                    If you want to put marker on the map, enter the place's name (e.g. town or street)
+                </p>
+                <div class="form-floating mb-3 mt-3 place">
+                    <input class="form-control verify" type="text" id="place" name="place" type="text"
+                        autocomplete="off" placeholder="Place">
+                    <label for="place">Place</label>
+                    <div class="login-alert" id="placeAlert"></div>
+                </div>
+            </div>
+            <input class="my-button submit-post" type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+<script>
+    let sub = document.getElementById("picture-button");
+    function clickSubmit() {
+        sub.click();
+    };
+
+    // Change content if sent input was invalid
+    var invalid = JSON.parse('{{ invalid | tojson }}');
+
+    if (invalid.invalid == "modify") {
+        document.getElementById('author').value = invalid.author;
+        document.getElementById('title').value = invalid.title;
+        document.getElementById('quote').value = invalid.quote;
+        if (invalid.place) {
+            document.getElementById('place').value = invalid.place;
+            document.getElementById("place-info").innerHTML = "To change the marker's location enter new name of place.\nTo delete marker, leave the field empty.";
+        }
+        document.getElementById("browse-files").style.display = "none";
+        document.getElementById("switch-visible").style.display = "block";
+        document.getElementById("yourPicture").src = "static/" + invalid.photo;
+        document.getElementById("yourPicture").alt = invalid.title;
+        document.getElementById("header").innerHTML = "Modify your post";
+        document.getElementById("headrerInfo").innerHTML = "Any required field left empty won't be changed";
+        document.getElementById("headrerInfo").style.marginBottom = "1.75rem";
+        document.getElementById("quoteLabel").innerHTML = '';
+    };
+
+
+    if (invalid.invalid == true) {
+        header.style.color = 'red';
+        header.style.gridColumn = '1 / span2';
+        header.innerHTML = "Upload failed. Try again";
+        document.getElementById('author').value = invalid.author;
+        document.getElementById('title').value = invalid.title;
+        document.getElementById('quote').value = invalid.quote;
+        if (invalidPlace) {
+            document.getElementById('place').value = invalid.place;
+            document.getElementById('place-info').innerHTML = "The place could not be located";
+            document.getElementById('place-info').style.color = 'red';
+        }
+    };
+
+    function removeLabel() {
+        var text = document.getElementById("quote").value;
+        var chars = text.length;
+        if (chars > 9) {
+            document.getElementById("quoteLabel").innerHTML = '';
+        } else {
+            document.getElementById("quoteLabel").innerHTML = 'Quote'
+        }
+    }
+
+    function removePicture() {
+        sub.value = "";
+        document.getElementById("browse-files").style.display = "block";
+        document.getElementById("switch-visible").style.display = "none";
+    };
+
+    function showPicture(ev) {
+        var pict = document.getElementById("yourPicture");
+        var reader = new FileReader();
+        var file = ev.srcElement.files[0];
+
+        reader.onloadend = function () {
+            document.getElementById("browse-files").style.display = "none";
+            document.getElementById("switch-visible").style.display = "block";
+            pict.src = reader.result;
+            pict.alt = "Your picture";
+            document.getElementById("picture-buttonAlert").innerHTML = "";
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    function verifyForm(name) {
+        if (invalid.invalid == "modify") {
+            return true;
+        } else {
+            return verify(name);
+        };
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% macro pagi(posts, path_details) -%}
+{% if posts.pages[-1] > 1 %}
+<div class="text-center" style="margin-top: 1rem;">
+    <a href="{{ url_for(path_details.main, selection=path_details.sub, site=path_details.site, page=posts.page-1) }}"
+        class="btn btn-outline-dark {% if posts.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+    {% for page_num in posts.pages %}
+    {% if page_num %}
+    {% if posts.page == page_num %}
+    <a href="{{ url_for(path_details.main, selection=path_details.sub, site=path_details.site, page=page_num) }}"
+        class="btn btn-dark">{{ page_num }}</a>
+    {% else %}
+    <a href="{{ url_for(path_details.main, selection=path_details.sub, site=path_details.site, page=page_num) }}"
+        class="btn btn-outline-dark">{{ page_num
+        }}</a>
+    {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+    {% endfor %}
+    <a href="{{ url_for(path_details.main, selection=path_details.sub, site=path_details.site, page=posts.page+1) }}"
+        class="btn btn-outline-dark {% if posts.page == posts.pages[-1] %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-center">
+    Showing page {{ posts.page }} of {{ posts.pages[-1] }}
+</p>
+{% endif %}
+{%- endmacro %}

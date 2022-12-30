@@ -1,0 +1,74 @@
+{% extends "layout_main.html" %}
+
+{% block title %}
+Posts
+{% endblock %}
+
+{% block main %}
+<div class="container justify-content-center posts-exp">
+    <div id="sort-by-list" class="sort-by-list">
+        <ul>
+            <li>Sort by:</li>
+            <li><a class="links" href="{{'?site=latest'}}">Latest</a></li>
+            <li><a class="links" href="{{'?site=oldest'}}">Oldest</a></li>
+            <li><a class="links" href="{{'?site=most_popular'}}">Most popular</a></li>
+            <li><a class="links" href="{{'?site=authors'}}">Authors</a></li>
+            <li><a class="links" href="{{'?site=titles'}}">Titles</a></li>
+        </ul>
+    </div>
+    {% for post in posts.current_dbase %}
+    <div>
+        <div class="small-author-title">
+            <p>{{ post.author }}, {{ post.title }}</p>
+            <div><i class="bi bi-globe" value="{{ post.marker }}"></i></div>
+        </div>
+        <div class="small-post">
+            <a href="{{ url_for('display_post', p=post.id) }}">
+                <img src="{{ url_for('static', filename=post.thumbnail) }}" alt="{{ post.title }}"
+                    class="small-picture">
+            </a>
+            <div class="small-quote">
+                <span class="small-quote-text">{{ post.quote }}</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!--Insert pagination-->
+{% from "help.html" import pagi %}
+<div>{{ pagi(posts, path_details) }}</div>
+<script>
+    // Hide globe icon if coordinates are not available
+    var icons = document.getElementsByTagName('i')
+    for (var icon of icons) {
+        if (icon.attributes.value.value == "False") {
+            icon.style.display = "none";
+        }
+    };
+    var searchLoc = location.search;
+    var currentLoc = location.pathname;
+
+    if (currentLoc.includes('recommendations')) {
+        document.getElementById("sort-by-list").innerHTML = "The posts selected for you from the collections of users you have something in common with.";
+    };
+
+    var links = document.querySelectorAll('a.links');
+    for (li of links) {
+        if (li.href.includes(searchLoc.split("&")[0])) {
+            li.style.textDecoration = "underline";
+        };
+    };
+    var current_dbase = JSON.parse('{{posts.current_dbase | tojson}}');
+    if (current_dbase == 0) {
+        if (currentLoc.includes('posts')) {
+            document.getElementById("sort-by-list").innerHTML = "You haven't added any posts yet."
+        };
+        if (currentLoc.includes('collection')) {
+            document.getElementById("sort-by-list").innerHTML = "Your collection is empty."
+        };
+        if (currentLoc.includes('recommendations')) {
+            document.getElementById("sort-by-list").innerHTML = "Couldn't find any recommendations for you."
+        };
+    };
+</script>
+{% endblock %}
