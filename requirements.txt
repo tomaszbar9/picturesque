@@ -4,3 +4,4 @@ Flask-Session==0.4.0
 Flask-SQLAlchemy==2.5.1
 geopy==2.2.0
 Pillow==8.4.0
+SQLAlchemy==1.4.39
